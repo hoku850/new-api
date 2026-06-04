@@ -2,7 +2,7 @@
 
 ![new-api](/web/default/public/logo.png)
 
-# New API
+# New API-
 
 🍥 **Next-Generation Large Model Gateway and AI Asset Management System**
 
