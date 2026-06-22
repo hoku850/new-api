@@ -653,7 +653,7 @@ func (user *User) FillUserByGitHubId() error {
 
 func (user *User) FillUserByGoogleId() error {
 	if user.GoogleId == "" {
-		return errors.New(i18n.MsgUserGoogleIdEmpty)
+		return errors.New("Google id 为空！")
 	}
 	DB.Where(User{GoogleId: user.GoogleId}).First(user)
 	return nil
