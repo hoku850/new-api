@@ -107,6 +107,7 @@ const (
 	MsgUserAffCodeEmpty              = "user.aff_code_empty"
 	MsgUserEmailEmpty                = "user.email_empty"
 	MsgUserGitHubIdEmpty             = "user.github_id_empty"
+	MsgUserGoogleIdEmpty             = "user.google_id_empty"
 	MsgUserDiscordIdEmpty            = "user.discord_id_empty"
 	MsgUserOidcIdEmpty               = "user.oidc_id_empty"
 	MsgUserWeChatIdEmpty             = "user.wechat_id_empty"
