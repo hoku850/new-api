@@ -12,6 +12,7 @@ import (
 	"github.com/QuantumNous/new-api/i18n"
 	"github.com/QuantumNous/new-api/logger"
 	"github.com/QuantumNous/new-api/model"
+	"github.com/QuantumNous/new-api/setting/system_setting"
 	"github.com/gin-gonic/gin"
 )
 
@@ -57,7 +58,7 @@ func (p *GoogleProvider) ExchangeToken(ctx context.Context, code string, c *gin.
 	logger.LogDebug(ctx, "[OAuth-Google] ExchangeToken: code=%s...", code[:min(len(code), 10)])
 
 	// Google requires redirect_uri for token exchange
-	redirectUri := fmt.Sprintf("%s/oauth/google", common.ServerAddress)
+	redirectUri := fmt.Sprintf("%s/oauth/google", system_setting.ServerAddress)
 
 	payload := map[string]string{
 		"client_id":     common.GoogleClientId,
