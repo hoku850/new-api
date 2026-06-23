@@ -18,6 +18,7 @@ For commercial licensing, please contact support@quantumnous.com
 */
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+import { FcGoogle } from 'react-icons/fc'
 import {
   IconDiscord,
   IconGithub,
@@ -58,6 +59,7 @@ export function OAuthProviders({
     githubButtonText,
     githubButtonDisabled,
     handleGitHubLogin,
+    handleGoogleLogin,
     handleDiscordLogin,
     handleOIDCLogin,
     handleLinuxDOLogin,
@@ -84,6 +86,15 @@ export function OAuthProviders({
       onClick: handleGitHubLogin,
       icon: <IconGithub className='h-4 w-4' />,
       disabled: githubButtonDisabled,
+    })
+  }
+
+  if (status?.google_oauth) {
+    providerButtons.push({
+      key: 'google',
+      label: t('Continue with Google'),
+      onClick: handleGoogleLogin,
+      icon: <FcGoogle className='h-4 w-4' />,
     })
   }
 

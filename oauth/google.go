@@ -1,11 +1,12 @@
 package oauth
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
+	"strings"
 	"time"
 
 	"github.com/QuantumNous/new-api/common"
@@ -60,24 +61,19 @@ func (p *GoogleProvider) ExchangeToken(ctx context.Context, code string, c *gin.
 	// Google requires redirect_uri for token exchange
 	redirectUri := fmt.Sprintf("%s/oauth/google", system_setting.ServerAddress)
 
-	payload := map[string]string{
-		"client_id":     common.GoogleClientId,
-		"client_secret": common.GoogleClientSecret,
-		"code":          code,
-		"grant_type":    "authorization_code",
-		"redirect_uri":  redirectUri,
-	}
-	jsonData, err := common.Marshal(payload)
-	if err != nil {
-		return nil, err
-	}
+	values := url.Values{}
+	values.Set("client_id", common.GoogleClientId)
+	values.Set("client_secret", common.GoogleClientSecret)
+	values.Set("code", code)
+	values.Set("grant_type", "authorization_code")
+	values.Set("redirect_uri", redirectUri)
 
 	req, err := http.NewRequestWithContext(ctx, "POST", "https://oauth2.googleapis.com/token",
-		bytes.NewReader(jsonData))
+		strings.NewReader(values.Encode()))
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Set("Accept", "application/json")
 
 	client := http.Client{
@@ -119,7 +115,7 @@ func (p *GoogleProvider) ExchangeToken(ctx context.Context, code string, c *gin.
 func (p *GoogleProvider) GetUserInfo(ctx context.Context, token *OAuthToken) (*OAuthUser, error) {
 	logger.LogDebug(ctx, "[OAuth-Google] GetUserInfo: fetching user info")
 
-	req, err := http.NewRequestWithContext(ctx, "GET", "https://www.googleapis.com/oauth2/v2/userinfo", nil)
+	req, err := http.NewRequestWithContext(ctx, "GET", "https://openidconnect.googleapis.com/v1/userinfo", nil)
 	if err != nil {
 		return nil, err
 	}

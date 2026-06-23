@@ -11,6 +11,16 @@ const semiUiDir = path.resolve(
   '../..',
 )
 
+// web/default 引入的 date-fns@4 被 hoist 到 web/node_modules，其 package.json 的 exports
+// 白名单封锁了 ./_lib/*、./format/index.js 等内部子路径；而 semi 依赖的 date-fns-tz@1.3.8
+// 仍按 date-fns v2 的目录结构 require 这些深路径（date-fns 对它仅为 peerDependency），
+// 于是错配到 v4，导致 classic 构建报 "is not defined by exports"。classic 自身不直接使用
+// date-fns（全部经 semi 间接调用），故将构建内的 date-fns 统一指向 semi 配对的
+// date-fns@2.30.0，使 date-fns-tz 正确配对。
+const dateFnsDir = path.dirname(
+  require.resolve('date-fns/package.json', { paths: [semiUiDir] }),
+)
+
 export default defineConfig(({ envMode }) => {
   const env = loadEnv({ mode: envMode, prefixes: ['VITE_'] })
   const clientServerUrl =
@@ -43,6 +53,7 @@ export default defineConfig(({ envMode }) => {
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
+        'date-fns': dateFnsDir,
         '@douyinfe/semi-ui/dist/css/semi.css': path.resolve(
           semiUiDir,
           'dist/css/semi.css',

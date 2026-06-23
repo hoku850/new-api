@@ -555,6 +555,7 @@ func (user *User) ClearBinding(bindingType string) error {
 	bindingColumnMap := map[string]string{
 		"email":    "email",
 		"github":   "github_id",
+		"google":   "google_id",
 		"discord":  "discord_id",
 		"oidc":     "oidc_id",
 		"wechat":   "wechat_id",

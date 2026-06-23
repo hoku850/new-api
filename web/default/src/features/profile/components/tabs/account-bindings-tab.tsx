@@ -20,10 +20,12 @@ import { useEffect, useMemo, useState, useCallback } from 'react'
 import { Mail, Shield, Send, Link2, Unlink } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { SiGithub, SiWechat, SiLinux } from 'react-icons/si'
+import { FcGoogle } from 'react-icons/fc'
 import { toast } from 'sonner'
 import { IconDiscord } from '@/assets/brand-icons'
 import {
   handleGitHubOAuth,
+  handleGoogleOAuth,
   handleOIDCOAuth,
   handleDiscordOAuth,
   handleLinuxDOOAuth,
@@ -185,6 +187,23 @@ export function AccountBindingsTab({
         onBind: () => {
           if (status?.github_client_id) {
             handleGitHubOAuth(status.github_client_id)
+          }
+        },
+      },
+      {
+        id: 'google',
+        label: t('Google'),
+        icon: FcGoogle as React.ComponentType<{ className?: string }>,
+        value: (profile as unknown as Record<string, unknown>).google_id as
+          | string
+          | undefined,
+        isBound: Boolean(
+          (profile as unknown as Record<string, unknown>).google_id
+        ),
+        isEnabled: status?.google_oauth || false,
+        onBind: () => {
+          if (status?.google_client_id) {
+            handleGoogleOAuth(status.google_client_id)
           }
         },
       },

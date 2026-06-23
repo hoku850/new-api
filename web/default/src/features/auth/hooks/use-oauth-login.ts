@@ -25,6 +25,7 @@ import { api } from '@/lib/api'
 import { getOAuthState } from '../api'
 import {
   buildGitHubOAuthUrl,
+  buildGoogleOAuthUrl,
   buildDiscordOAuthUrl,
   buildOIDCOAuthUrl,
   buildLinuxDOOAuthUrl,
@@ -115,6 +116,27 @@ export function useOAuthLogin(status: SystemStatus | null) {
       setIsLoading(false)
       setGithubButtonText(t('Continue with GitHub'))
       setGithubButtonDisabled(false)
+    }
+  }
+
+  const handleGoogleLogin = async () => {
+    if (!status?.google_client_id) return
+
+    setIsLoading(true)
+    try {
+      await resetSession()
+      const state = await getOAuthState()
+      if (!state) {
+        toast.error(t('Failed to initialize OAuth'))
+        return
+      }
+
+      const url = buildGoogleOAuthUrl(status.google_client_id, state)
+      window.open(url, '_self')
+    } catch (_error) {
+      toast.error(t('Failed to start Google login'))
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -226,6 +248,7 @@ export function useOAuthLogin(status: SystemStatus | null) {
     githubButtonText,
     githubButtonDisabled,
     handleGitHubLogin,
+    handleGoogleLogin,
     handleDiscordLogin,
     handleOIDCLogin,
     handleLinuxDOLogin,
